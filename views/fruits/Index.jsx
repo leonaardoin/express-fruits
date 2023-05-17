@@ -38,18 +38,6 @@ class Index extends React.Component {
           <a href="/fruits/new">Create a New Fruit</a>
         </nav>
         <ul>
-          {
-            fruits.map((fruit)=>{
-              return (
-                <li key={fruit._id}>
-                  The <a href={`/fruits/${fruit._id}`}>{fruit.name}</a>
-                  {' '}is {fruit.color} <br/>
-                  {
-                    fruit.readyToEat?
-                    '  It is ready to eat':
-                    '  It is NASTY!!!!!!'
-                  }
-                  <br />
                   {this.props.fruits.map((fruit,i) => {
                   return <li key={i}>
                       <a href={`/fruits/${fruit.id}`}>{fruit.name}</a>
@@ -62,10 +50,6 @@ class Index extends React.Component {
                       </form>
                   </li>
               })}
-                </li>
-              )
-            })
-          }
         </ul>
       </DefaultLayout>
     )
