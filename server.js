@@ -4,6 +4,8 @@ const port = 3000
 const Fruit = require('./models/fruits.js');
 const Vegetables = require('./models/vegetables.js');
 const mongoose= require('mongoose');
+const methodOverride = require('method-override');
+
 
 require('dotenv').config()
 
@@ -18,13 +20,14 @@ app.use(express.urlencoded({extended:false}));
 app.set('view engine', 'jsx');
 app.engine('jsx', require('jsx-view-engine').createEngine());
 
+app.use(methodOverride('_method'));
 app.use((req, res, next) => {
     console.log('I run for all routes');
     next();
 });
 
 //Routes Here
-app.get('/', function(req, res){
+app.get('/', (req, res)=>{
     res.render('home/Index', { fruits: fruits });
 });   
 
@@ -36,6 +39,10 @@ app.get('/fruits', (req, res)=>{
     });
 });  
 
+app.get('/', (req, res)=>{
+    res.render('home/Index', { vegetables: vegetables });
+});   
+
 app.get('/vegetables', (req, res)=>{
     Vegetables.find({}, (error, allVegetables)=>{
         res.render('vegetables/Index', { 
@@ -44,12 +51,27 @@ app.get('/vegetables', (req, res)=>{
     })
 });
 
+app.get('/fruits/new', (req, res) => {
+    res.render('fruits/New');
+});
+
 app.get('/vegetables/new', (req, res) => {
     res.render('vegetables/New');
 });
 
-app.get('/fruits/new', (req, res) => {
-    res.render('fruits/New');
+app.get('/fruits/:id/edit', (req, res)=>{
+    Fruit.findById(req.params.id, (err, foundFruit)=>{ //find the fruit
+      if(!err){
+        res.render(
+    		  'fruits/Edit',
+    		{
+    			fruit: foundFruit //pass in the found fruit so we can prefill the form
+    		}
+    	);
+    } else {
+      res.send({ msg: err.message })
+    }
+    });
 });
 
 app.get('/fruits/:id', (req, res)=>{
@@ -60,11 +82,62 @@ app.get('/fruits/:id', (req, res)=>{
     });
 });
 
+app.get('/vegetables/:id/edit', (req, res)=>{
+    Vegetables.findById(req.params.id, (err, foundVegetables)=>{ //find the vegetable
+      if(!err){
+        res.render(
+    		  'vegetables/Edit',
+    		{
+    			vegetable: foundVegetables //pass in the found vegetable so we can prefill the form
+    		}
+    	);
+    } else {
+      res.send({ msg: err.message })
+    }
+    });
+});
+
 app.get('/vegetables/:id', (req, res)=>{
     Vegetables.findById(req.params.id, (err, foundVegetables)=>{
         res.render('vegetables/Show', {
             vegetables:foundVegetables
         });
+    });
+});
+
+app.delete('/fruits/:id', (req, res)=>{
+    Fruit.findByIdAndRemove(req.params.id, (err, data)=>{
+        res.redirect('/fruits');//redirect back to fruits index
+    });
+});
+
+app.delete('/vegetables/:id', (req, res)=>{
+    Vegetables.findByIdAndRemove(req.params.id, (err, data)=>{
+        res.redirect('/vegetables');//redirect back to vegetables index
+    });
+});
+
+app.put('/fruits/:id', (req, res)=>{
+    if(req.body.readyToEat === 'on'){
+        req.body.readyToEat = true;
+    } else {
+        req.body.readyToEat = false;
+    }
+    Fruit.findByIdAndUpdate(req.params.id, req.body, (err, updatedFruit)=>{
+       console.log(updatedFruit)
+        res.redirect(`/fruits/${req.params.id}`);
+    });
+});
+
+app.put('/vegetables/:id', (req, res)=>{
+    if(req.body.readyToEat === 'on'){
+        req.body.readyToEat = true;
+    } else {
+        req.body.readyToEat = false;
+    }
+    Vegetables.findByIdAndUpdate(req.params.id, req.body, (err, updatedVegetable)=>{
+       console.log(updatedVegetable)
+        res.redirect(`/vegetables/${req.params.id}`);
     });
 });
 

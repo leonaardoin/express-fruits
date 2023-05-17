@@ -20,9 +20,9 @@ class Show extends React.Component {
     render(){
         return (
             <div>
-                <h1>Vegetables show page</h1>
+                <h1>Vegetables Show Page</h1>
                 The { this.props.vegetable.name } is { this.props.vegetable.color }
-        { this.props.vegetable.readyToEat ? `It is ready to eat` : `It is not ready to eat` }
+        { this.props.vegetable.readyToEat ? ` It is ready to eat` : ` It is not ready to eat` }
             </div>
         )
     }
