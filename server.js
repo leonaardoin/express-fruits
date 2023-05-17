@@ -39,10 +39,6 @@ app.get('/fruits', (req, res)=>{
     });
 });  
 
-app.get('/', (req, res)=>{
-    res.render('home/Index', { vegetables: vegetables });
-});   
-
 app.get('/vegetables', (req, res)=>{
     Vegetables.find({}, (error, allVegetables)=>{
         res.render('vegetables/Index', { 
@@ -57,52 +53,6 @@ app.get('/fruits/new', (req, res) => {
 
 app.get('/vegetables/new', (req, res) => {
     res.render('vegetables/New');
-});
-
-app.get('/fruits/:id/edit', (req, res)=>{
-    Fruit.findById(req.params.id, (err, foundFruit)=>{ //find the fruit
-      if(!err){
-        res.render(
-    		  'fruits/Edit',
-    		{
-    			fruit: foundFruit //pass in the found fruit so we can prefill the form
-    		}
-    	);
-    } else {
-      res.send({ msg: err.message })
-    }
-    });
-});
-
-app.get('/fruits/:id', (req, res)=>{
-    Fruit.findById(req.params.id, (err, foundFruit)=>{
-        res.render('fruits/Show', {
-            fruit:foundFruit
-        });
-    });
-});
-
-app.get('/vegetables/:id/edit', (req, res)=>{
-    Vegetables.findById(req.params.id, (err, foundVegetables)=>{ //find the vegetable
-      if(!err){
-        res.render(
-    		  'vegetables/Edit',
-    		{
-    			vegetable: foundVegetables //pass in the found vegetable so we can prefill the form
-    		}
-    	);
-    } else {
-      res.send({ msg: err.message })
-    }
-    });
-});
-
-app.get('/vegetables/:id', (req, res)=>{
-    Vegetables.findById(req.params.id, (err, foundVegetables)=>{
-        res.render('vegetables/Show', {
-            vegetables:foundVegetables
-        });
-    });
 });
 
 app.delete('/fruits/:id', (req, res)=>{
@@ -160,6 +110,52 @@ app.post('/vegetables', (req, res)=>{
     }
     Vegetables.create(req.body, (error, createdVegetables)=>{
         res.redirect('/vegetables');
+    });
+});
+
+app.get('/fruits/:id/edit', (req, res)=>{
+    Fruit.findById(req.params.id, (err, foundFruit)=>{ //find the fruit
+      if(!err){
+        res.render(
+    		  'fruits/Edit',
+    		{
+    			fruit: foundFruit //pass in the found fruit so we can prefill the form
+    		}
+    	);
+    } else {
+      res.send({ msg: err.message })
+    }
+    });
+});
+
+app.get('/fruits/:id', (req, res)=>{
+    Fruit.findById(req.params.id, (err, foundFruit)=>{
+        res.render('fruits/Show', {
+            fruit:foundFruit
+        });
+    });
+});
+
+app.get('/vegetables/:id/edit', (req, res)=>{
+    Vegetables.findById(req.params.id, (err, foundVegetables)=>{ //find the vegetable
+      if(!err){
+        res.render(
+    		  'vegetables/Edit',
+    		{
+    			vegetable: foundVegetables //pass in the found vegetable so we can prefill the form
+    		}
+    	);
+    } else {
+      res.send({ msg: err.message })
+    }
+    });
+});
+
+app.get('/vegetables/:id', (req, res)=>{
+    Vegetables.findById(req.params.id, (err, foundVegetables)=>{
+        res.render('vegetables/Show', {
+            vegetable:foundVegetables
+        });
     });
 });
 
